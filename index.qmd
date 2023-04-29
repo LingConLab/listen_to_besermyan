@@ -9,16 +9,12 @@ editor_options:
 ```{r, echo=FALSE, message=FALSE}
 library(tidyverse)
 readxl::read_xlsx("besermyan_v_acc.xlsx") |> 
-  filter(Preposition %in% c("в", "во", "в_drop", "в_drop?")) ->
-  df
-
-df |> 
+  filter(Preposition %in% c("в", "во", "в_drop", "в_drop?")) |> 
   rename(preposition = Preposition) |> 
   mutate(audio = str_remove(source, ".eaf"),
          audio = str_c(audio, "-", round(as.double(time_start)*1000)),
          audio = str_c(audio, "-", round(as.double(time_end)*1000)),
          audio = str_c("http://lingconlab.ru/BesermanRus/OUT/", audio, ".wav")) |> 
-  sample_n(size = nrow(df)) |> 
   mutate(id = 1:n()) |> 
   select(id, sentence, audio, preposition) ->
 df
